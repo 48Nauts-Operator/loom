@@ -38,7 +38,7 @@ the "Ansible playbook for agents":
 
 ### Where it is today
 
-Honest status: the **Weave format is stable and portable.** The **runner ships
+The **Weave format is stable and portable.** The **runner ships
 inside [xNAUT](https://github.com/48Nauts-Operator/xNaut)** (`nautloom.rs`) and
 currently executes **Claude Code / Codex** on **GitVM** sandboxes. A standalone
 `loom` CLI, more executors, and pluggable runtimes are the roadmap (see
