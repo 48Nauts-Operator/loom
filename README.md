@@ -36,6 +36,26 @@ the "Ansible playbook for agents":
   recorded report make agent work reproducible and inspectable, not "I ran an
   agent and it did stuff."
 
+### Why it saves money
+
+Loom isn't only a common format — a big reason it exists is to **cut the cost of
+running agents**:
+
+- **Bring your own subscription.** Runs execute on *your* Claude / Codex / agent
+  account — you pay the agent's own token cost, nothing on top.
+- **One spec, any agent.** A Weave is agent-agnostic, so you define the task
+  once and run it on whichever agent is cheapest for the job — drop to a smaller
+  model or swap CLIs without rewriting anything. One streamlined workflow across
+  every agent instead of bespoke glue per tool.
+- **Run on the cheapest backend that fits.** Because the runtime is pluggable, a
+  Weave can run on local Docker (free) for routine work and reach for a cloud
+  microVM only when a job actually needs it — no single-vendor pricing lock-in.
+- **Ephemeral and right-sized.** Each Weave declares its own CPU / memory / TTL,
+  and the sandbox is torn down when the run ends. You pay for the run, not for
+  idle agent infrastructure.
+- **Verified before it ships.** Acceptance criteria gate each run, so you don't
+  burn spend — or review time — on work that didn't pass.
+
 ### Where it is today
 
 The **Weave format is stable and portable.** The **runner ships
@@ -131,6 +151,14 @@ each.
 - [xNAUT](https://github.com/48Nauts-Operator/xNaut) — the native terminal /
   agent cockpit that Loom ships inside today.
 - [xnaut.dev](https://xnaut.dev) — product site.
+
+## Contributing
+
+Loom is open (MIT) and **contributors are welcome** — most of all new
+**executors** (wire up another agent CLI) and **runtimes** (Docker, e2b,
+Daytona). Those are the two extension points: the executor table and the runtime
+driver. Pick something from the [Roadmap](#roadmap), open an issue to discuss,
+and send a PR.
 
 ## License
 
