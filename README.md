@@ -2,19 +2,49 @@
 
 **A declarative format for deploying a coding agent as a repeatable run.**
 
-A *Weave* (`*.loom.json`, spec `nautloom/v1`) describes one agent run in a fixed
-shape — the sandbox it runs in, the goal, the steps, what "done" means, and what
-to report back. Loom takes that Weave, runs the agent in an isolated sandbox,
-checks the acceptance criteria, and ships the result (branch + PR).
+## About Loom
 
-Think of a Weave as a *manifest for an agent run* — the way a Kubernetes
-manifest describes a deployment, a Weave describes an agentic task.
+Loom turns an agent task into a **portable, verifiable unit of work.** Instead
+of babysitting an agent in a terminal, you write a *Weave* — a small JSON file
+(`*.loom.json`, spec `nautloom/v1`) that declares *what* to do, *where* to run
+it, *what "done" means*, and *what to hand back*. Loom spins an isolated
+sandbox, runs the agent, checks the acceptance criteria, and ships the result as
+a branch + PR with a recorded report.
 
-> **Status:** the Weave **format** is stable and portable. The **runner**
-> currently ships inside [xNAUT](https://github.com/48Nauts-Operator/xNaut)
-> (`nautloom.rs`) and drives runs through [GitVM](https://xnaut.dev) sandboxes.
-> A standalone `loom` CLI (`loom run weave.json`) is the roadmap — see
-> [Roadmap](#roadmap). This repo is the spec, examples, and reference runner.
+**The mental model.** A Weave is closer to a **Kubernetes Job manifest** or a
+**CI workflow** than to Terraform. You *declaratively submit and verify* a run —
+you do not declare a desired end-state and reconcile to it. Agent runs are
+probabilistic and one-shot; there is no idempotent convergence. So Loom is
+declarative **submission + verification**, not declarative **outcome**.
+
+### When it grows up
+
+Loom is meant to become the **common contract for running an agent on a task** —
+the "Ansible playbook for agents":
+
+- **Agent-agnostic** — the same Weave runs on Claude Code, Codex, Pi, Gemini,
+  Aider, opencode, or any CLI that takes a prompt and exits. The `goal` is just
+  text; the executor is pluggable.
+- **Runtime-agnostic** — `runtime.provider` selects *where* it runs: GitVM
+  microVMs today; Docker, e2b, and Daytona are the roadmap. Swap the backend
+  without touching the task.
+- **Runs anywhere** — one format that xNAUT's UI, a headless `loom` CLI, and CI
+  all execute identically. Write once, run in any context.
+- **Composable** — Weaves as building blocks: fan out a swarm, chain steps,
+  gate on acceptance.
+- **Verifiable & auditable** — sandbox isolation + acceptance checks + a
+  recorded report make agent work reproducible and inspectable, not "I ran an
+  agent and it did stuff."
+
+### Where it is today
+
+Honest status: the **Weave format is stable and portable.** The **runner ships
+inside [xNAUT](https://github.com/48Nauts-Operator/xNaut)** (`nautloom.rs`) and
+currently executes **Claude Code / Codex** on **GitVM** sandboxes. A standalone
+`loom` CLI, more executors, and pluggable runtimes are the roadmap (see
+[Roadmap](#roadmap)). This repo is the spec, examples, and reference runner that
+get there — the format is real now; the "runs anywhere, any agent" vision is
+being built.
 
 ## The Weave format
 
@@ -87,8 +117,13 @@ each.
 
 ## Roadmap
 
-- [ ] Standalone `loom` CLI — `loom run weave.json` outside xNAUT.
-- [ ] Pluggable runtimes beyond GitVM (local Docker, other microVM providers).
+- [ ] **`loom-core`** — extract the runner into a standalone crate that both
+  xNAUT and the CLI share (no divergent runners).
+- [ ] **Standalone `loom` CLI** — `loom run weave.json`, outside xNAUT.
+- [ ] **More executors** — Pi, Gemini, Aider, opencode; config-driven so any
+  headless CLI drops in.
+- [ ] **Pluggable runtimes** — Docker, e2b, and Daytona alongside GitVM.
+- [ ] **Composable weaves** — chaining + swarm fan-out as first-class.
 - [ ] Weave registry + versioning.
 
 ## Related
