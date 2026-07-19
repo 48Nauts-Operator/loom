@@ -11,11 +11,11 @@ it, *what "done" means*, and *what to hand back*. Loom spins an isolated
 sandbox, runs the agent, checks the acceptance criteria, and ships the result as
 a branch + PR with a recorded report.
 
-**The mental model.** A Weave is closer to a **Kubernetes Job manifest** or a
-**CI workflow** than to Terraform. You *declaratively submit and verify* a run —
-you do not declare a desired end-state and reconcile to it. Agent runs are
-probabilistic and one-shot; there is no idempotent convergence. So Loom is
-declarative **submission + verification**, not declarative **outcome**.
+**The mental model.** A Weave is like a **Kubernetes Job manifest** or a **CI
+workflow**, but for an agent: you declare *what* to run and *how to verify it*,
+and Loom executes it in a fresh sandbox and checks the result. Each run is
+one-shot and gated on its acceptance criteria — declarative submission and
+verification of agentic work.
 
 ### When it grows up
 
