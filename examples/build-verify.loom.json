@@ -1,0 +1,77 @@
+{
+  "spec": "nautloom/v1",
+  "kind": "Weave",
+  "metadata": {
+    "name": "build-verify",
+    "description": "Warm up a GitVM sandbox, build + test until green, record a video, pull artifacts, report back.",
+    "author": "48nauts",
+    "version": 1
+  },
+  "runtime": {
+    "provider": "gitvm",
+    "resources": {
+      "memoryMB": 8192,
+      "ttl": 21600,
+      "vcpus": 4
+    },
+    "template": "agent-desktop",
+    "tools": [
+      "playwright",
+      "codex"
+    ]
+  },
+  "intent": {
+    "goal": "",
+    "inputs": []
+  },
+  "steps": [
+    {
+      "action": "provision",
+      "id": "warmup"
+    },
+    {
+      "action": "sync",
+      "id": "sync"
+    },
+    {
+      "action": "agent",
+      "id": "work",
+      "with": {
+        "agent": "claude",
+        "goal": "$intent.goal"
+      }
+    },
+    {
+      "action": "test",
+      "id": "verify",
+      "loop": {
+        "max": 5,
+        "until": "pass"
+      }
+    },
+    {
+      "action": "record",
+      "id": "record"
+    },
+    {
+      "action": "artifacts",
+      "id": "collect"
+    },
+    {
+      "action": "teardown",
+      "id": "cleanup"
+    }
+  ],
+  "acceptance": [
+    "tests green",
+    "recording exists"
+  ],
+  "report": {
+    "include": [
+      "summary",
+      "tests",
+      "video"
+    ],
+    "to": "agentic"
+  }
+}

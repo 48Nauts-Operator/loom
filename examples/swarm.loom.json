@@ -1,0 +1,80 @@
+{
+  "spec": "nautloom/v1",
+  "kind": "Weave",
+  "metadata": {
+    "name": "swarm",
+    "description": "Lead agent spawns specialist sub-agents in their own sandboxes, coordinating via the mesh, then synthesizes.",
+    "author": "48nauts",
+    "version": 1
+  },
+  "runtime": {
+    "provider": "gitvm",
+    "resources": {
+      "memoryMB": 8192,
+      "ttl": 21600,
+      "vcpus": 4
+    },
+    "template": "agent-desktop",
+    "tools": [
+      "codex"
+    ]
+  },
+  "intent": {
+    "goal": "",
+    "inputs": []
+  },
+  "steps": [
+    {
+      "action": "provision",
+      "id": "warmup"
+    },
+    {
+      "action": "agent",
+      "id": "decompose",
+      "with": {
+        "agent": "claude",
+        "goal": "$intent.goal",
+        "role": "lead"
+      }
+    },
+    {
+      "action": "spawn",
+      "id": "dispatch",
+      "with": {
+        "agents": [
+          "codex"
+        ],
+        "coordinate": "mesh",
+        "provider": "gitvm"
+      }
+    },
+    {
+      "action": "agent",
+      "id": "synthesize",
+      "with": {
+        "agent": "claude",
+        "role": "lead"
+      }
+    },
+    {
+      "action": "artifacts",
+      "id": "collect"
+    },
+    {
+      "action": "teardown",
+      "id": "cleanup"
+    }
+  ],
+  "acceptance": [
+    "synthesis produced",
+    "sub-agent artifacts collected"
+  ],
+  "report": {
+    "include": [
+      "summary",
+      "tests",
+      "video"
+    ],
+    "to": "agentic"
+  }
+}

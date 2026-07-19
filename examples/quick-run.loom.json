@@ -1,0 +1,54 @@
+{
+  "spec": "nautloom/v1",
+  "kind": "Weave",
+  "metadata": {
+    "name": "quick-run",
+    "description": "Warm up, do the task in the sandbox, report. Minimal — no video.",
+    "author": "48nauts",
+    "version": 1
+  },
+  "runtime": {
+    "provider": "gitvm",
+    "resources": {
+      "memoryMB": 8192,
+      "ttl": 21600,
+      "vcpus": 4
+    },
+    "template": "agent-desktop",
+    "tools": []
+  },
+  "intent": {
+    "goal": "",
+    "inputs": []
+  },
+  "steps": [
+    {
+      "action": "provision",
+      "id": "warmup"
+    },
+    {
+      "action": "agent",
+      "id": "work",
+      "with": {
+        "agent": "claude",
+        "goal": "$intent.goal"
+      }
+    },
+    {
+      "action": "artifacts",
+      "id": "collect"
+    }
+  ],
+  "acceptance": [
+    "task done",
+    "summary produced"
+  ],
+  "report": {
+    "include": [
+      "summary",
+      "tests",
+      "video"
+    ],
+    "to": "agentic"
+  }
+}

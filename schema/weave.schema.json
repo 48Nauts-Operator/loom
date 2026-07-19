@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/48Nauts-Operator/loom/schema/weave.schema.json",
+  "title": "Loom Weave (nautloom/v1)",
+  "description": "A declarative description of one coding-agent run.",
+  "type": "object",
+  "required": ["spec", "kind", "metadata", "runtime", "intent"],
+  "additionalProperties": false,
+  "properties": {
+    "spec": { "const": "nautloom/v1" },
+    "kind": { "const": "Weave" },
+    "metadata": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["provider"],
+      "additionalProperties": true,
+      "properties": {
+        "provider": { "type": "string", "enum": ["gitvm"] },
+        "template": { "type": "string", "description": "Sandbox template, e.g. agent-desktop." },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "vcpus": { "type": "integer", "minimum": 1 },
+            "memoryMB": { "type": "integer", "minimum": 256 },
+            "ttl": { "type": "integer", "minimum": 60, "description": "Sandbox time-to-live in seconds." }
+          }
+        },
+        "tools": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "required": ["goal"],
+      "additionalProperties": false,
+      "properties": {
+        "goal": { "type": "string", "description": "The task pushed to the agent." },
+        "inputs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "Optional ordered sub-steps; empty runs the goal in one pass.",
+      "items": { "type": "object" }
+    },
+    "acceptance": {
+      "type": "array",
+      "description": "Optional checks that define done (e.g. tests pass).",
+      "items": { "type": "object" }
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["summary", "tests", "video"] }
+        },
+        "to": { "type": "string" }
+      }
+    }
+  }
+}

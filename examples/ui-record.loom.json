@@ -1,0 +1,60 @@
+{
+  "spec": "nautloom/v1",
+  "kind": "Weave",
+  "metadata": {
+    "name": "ui-record",
+    "description": "Spin up agent-desktop, run the UI/Playwright flow headed, screen-record it, report with the video.",
+    "author": "48nauts",
+    "version": 1
+  },
+  "runtime": {
+    "provider": "gitvm",
+    "resources": {
+      "memoryMB": 8192,
+      "ttl": 21600,
+      "vcpus": 4
+    },
+    "template": "agent-desktop",
+    "tools": [
+      "playwright"
+    ]
+  },
+  "intent": {
+    "goal": "",
+    "inputs": []
+  },
+  "steps": [
+    {
+      "action": "provision",
+      "id": "warmup"
+    },
+    {
+      "action": "agent",
+      "id": "work",
+      "with": {
+        "agent": "claude",
+        "goal": "$intent.goal",
+        "headed": true
+      }
+    },
+    {
+      "action": "record",
+      "id": "record"
+    },
+    {
+      "action": "artifacts",
+      "id": "collect"
+    }
+  ],
+  "acceptance": [
+    "a non-empty recording exists"
+  ],
+  "report": {
+    "include": [
+      "summary",
+      "tests",
+      "video"
+    ],
+    "to": "agentic"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "spec": "nautloom/v1",
+  "kind": "Weave",
+  "metadata": {
+    "name": "blank",
+    "description": "No template — the human's instructions are pushed verbatim to the agent.",
+    "author": "48nauts",
+    "version": 1
+  },
+  "runtime": {
+    "provider": "gitvm",
+    "resources": {
+      "memoryMB": 8192,
+      "ttl": 21600,
+      "vcpus": 4
+    },
+    "template": "agent-desktop",
+    "tools": []
+  },
+  "intent": {
+    "goal": "",
+    "inputs": []
+  },
+  "steps": [],
+  "acceptance": [],
+  "report": {
+    "include": [
+      "summary",
+      "tests",
+      "video"
+    ],
+    "to": "agentic"
+  }
+}
