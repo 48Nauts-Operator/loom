@@ -4,6 +4,11 @@
 
 ## About Loom
 
+> **Loom is the uniform, verifiable, auditable contract for running agents — any
+> agent, any runtime.** The manifest is the shared interface; the value is the
+> verification, governance, and audit layer that makes non-deterministic agent
+> work trustworthy and controllable at scale.
+
 Loom turns an agent task into a **portable, verifiable unit of work.** Instead
 of babysitting an agent in a terminal, you write a *Weave* — a small JSON file
 (`*.loom.json`, spec `nautloom/v1`) that declares *what* to do, *where* to run
